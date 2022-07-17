@@ -1,7 +1,13 @@
-.form{
+.form, .form form{
   display: flex;
   flex-direction: column;
-  width: 50%;
-  margin: auto;
-  margin-top: 80px;
+}
+
+.form{
+  align-items: center
+}
+
+.form form{
+  align-items: flex-start;
+  margin: 80px;
 }
