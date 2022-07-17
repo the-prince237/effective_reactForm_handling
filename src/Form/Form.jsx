@@ -1,53 +1,47 @@
-import React, { useState } from 'react'
+import React, { useRef } from 'react'
 import './Form.css'
 
 const Form = () => {
 
-  const initialState = { name: "", email: "", password: "" }
+  const nameRef = useRef("")
+  const emailRef = useRef("")
+  const passwordRef = useRef("")
 
-  const [inputs, setinputs] = useState(initialState);
-  
-  const handleChange = (e) => {
-    setinputs({ ...inputs, [`${e.target.name}`]: e.target.value })
-  }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const email = emailRef.current.value;
+    const name = nameRef.current.value;
+    const password = passwordRef.current.value;
+
+    console.log(email, name, password)
+  } 
 
   return (
     <div className='form'>
-      <form onSubmit={(e) => {
-        e.preventDefault();
-        console.log(inputs)
-      }}>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="name">Name</label>
         <input 
           type="text" 
           name='name' 
-          placeholder='John Doe' 
-          value={inputs.name}
-          onChange={(e) => handleChange(e)}
+          placeholder='John Doe'
+          ref={nameRef}
         />
         <label htmlFor="email">Email</label>
         <input 
           type="email" 
           name='email' 
           placeholder='johndoe09@example.ex' 
-          value={inputs.email}
-          onChange={(e) => handleChange(e)}
+          ref={emailRef}
         />
         <label htmlFor="password">Password</label>
         <input 
           type="password" 
           name='password' 
           placeholder='enter your password please' 
-          value={inputs.password}
-          onChange={(e) => handleChange(e)}
+          ref={passwordRef}
         />
         <button type='submit'>Submit</button>
       </form>
-      <div>
-        <p>{inputs.name}</p>
-        <p>{inputs.email}</p>
-        <p>{inputs.password}</p>
-      </div>
     </div>
   )
 }
