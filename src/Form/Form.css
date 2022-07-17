@@ -1,0 +1,13 @@
+.form, .form form{
+  display: flex;
+  flex-direction: column;
+}
+
+.form{
+  align-items: center
+}
+
+.form form{
+  align-items: flex-start;
+  margin: 80px;
+}
