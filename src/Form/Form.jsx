@@ -1,19 +1,31 @@
-import React, { useRef } from 'react'
+import React, { useReducer } from 'react'
 import './Form.css'
+
+const initialState = {
+  name: "",
+  email: "",
+  password: ""
+};
+const reducer = (state, action) => {
+  switch(action.type){
+    case 'SETNAME' :
+      return { ...state, name: action.payload };
+    case 'SETEMAIL' :
+      return { ...state, email: action.payload };
+    case 'SETPASSWORD' :
+      return { ...state, password: action.payload }
+    default: 
+      return state;
+  }
+}
 
 const Form = () => {
 
-  const nameRef = useRef("")
-  const emailRef = useRef("")
-  const passwordRef = useRef("")
-
+  const [state, dispatch] = useReducer(reducer, initialState)
+  
   const handleSubmit = (e) => {
     e.preventDefault();
-    const email = emailRef.current.value;
-    const name = nameRef.current.value;
-    const password = passwordRef.current.value;
-
-    console.log(email, name, password)
+    console.log(state)
   } 
 
   return (
@@ -24,21 +36,24 @@ const Form = () => {
           type="text" 
           name='name' 
           placeholder='John Doe'
-          ref={nameRef}
+          value={state.name}
+          onChange={(e) => dispatch({ type: 'SETNAME', payload: e.target.value})}
         />
         <label htmlFor="email">Email</label>
         <input 
           type="email" 
           name='email' 
           placeholder='johndoe09@example.ex' 
-          ref={emailRef}
+          value={state.email}
+          onChange={(e) => dispatch({ type: 'SETEMAIL', payload: e.target.value})}
         />
         <label htmlFor="password">Password</label>
         <input 
           type="password" 
           name='password' 
-          placeholder='enter your password please' 
-          ref={passwordRef}
+          placeholder='enter your password please'
+          value={state.password}
+          onChange={(e) => dispatch({ type: 'SETPASSWORD', payload: e.target.value})}
         />
         <button type='submit'>Submit</button>
       </form>
