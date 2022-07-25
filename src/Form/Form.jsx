@@ -1,48 +1,89 @@
-import React, { useReducer, useState } from 'react'
+import React, { useState } from 'react'
+import { configureStore, createSlice } from '@reduxjs/toolkit'
+import produce from 'immer'
+
 import './Form.css'
 
 const initialState = {
-  inputs : {
     name: "",
     email: "",
     password: ""
-  }
 };
-const reducer = (state, action) => {
-  switch(action.type){
-    case 'SETINPUTS' :
-      return { ...state, inputs: action.payload };
-    default: 
-      return state;
+
+const formSlice = createSlice({
+  name: "form",
+  initialState: initialState,
+  reducers:{
+    setName: {
+      reducer(state, action){
+        return produce(state, (draft) => {
+          draft.name = action.payload
+        })
+      },
+      prepare: (name) => {
+        return { 
+          payload: name
+        }
+      }
+    },
+    setEmail: {
+      reducer(state, action){
+        return produce(state, (draft) => {
+          draft.email = action.payload
+        })
+      },
+      prepare: (email) => {
+        return {
+          payload: email
+        }
+      }
+    },
+    setPassword: {
+      reducer(state, action){
+        return produce(state, (draft) => {
+          draft.password = action.payload
+        })
+      },
+      prepare: (password) => {
+        return{
+          payload: password
+        }
+      }
+    }
   }
-}
+})
+
+const store = configureStore({
+  reducer: {
+    form: formSlice.reducer
+  }
+})
+
+const { setName, setEmail, setPassword } = formSlice.actions;
 
 const Form = () => {
 
-  const [inputs, setInputs] = useState(initialState.inputs)
-
-  const [state, dispatch] = useReducer(reducer, initialState)
+  const [inputs, setInputs] = useState(initialState)
   
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(state)
+    console.log(inputs)
   } 
 
-  function handleChange(e){
-    setInputs({ ...inputs, [e.target.name]: e.target.value });
-    dispatch({ type: 'SETINPUTS', payload: inputs })
-  }
 
   return (
     <div className='form'>
       <form onSubmit={handleSubmit}>
-        <label htmlFor="name">Name</label>
+        <label htmlFor="nom">Name</label>
         <input 
           type="text" 
           name='name' 
           placeholder='John Doe'
           value={inputs.name}
-          onChange={handleChange}
+          onChange={(e) =>{
+            setInputs({...inputs, name: e.target.value});
+            store.dispatch(setName(inputs.name))
+          }}
         />
         <label htmlFor="email">Email</label>
         <input 
@@ -50,7 +91,10 @@ const Form = () => {
           name='email' 
           placeholder='johndoe09@example.ex' 
           value={inputs.email}
-          onChange={handleChange}
+          onChange={(e) =>{
+            setInputs({...inputs, email: e.target.value});
+            store.dispatch(setEmail(inputs.email))
+          }}
         />
         <label htmlFor="password">Password</label>
         <input 
@@ -58,12 +102,15 @@ const Form = () => {
           name='password' 
           placeholder='enter your password please'
           value={inputs.password}
-          onChange={handleChange}
+          onChange={(e) =>{
+            setInputs({...inputs, password: e.target.value});
+            store.dispatch(setPassword(inputs.password))
+          }}
         />
         <button type='submit'>Submit</button>
       </form>
       <div>
-        {state.inputs.name} {state.inputs.email} {state.inputs.password}
+        {inputs.name} <br/> {inputs.email} <br/> {inputs.password}
       </div>
     </div>
   )
